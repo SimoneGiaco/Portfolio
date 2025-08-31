@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset
 
-
+#Starting from the dataset of sentences 'ds' we define the tensors to be fed to the Transformer.
 class Bilingualdataset(Dataset):
     def __init__(self, ds, tokenizer_src, tokenizer_tgt, lang_src, lang_tgt, seq_len)-> None:
         super().__init__()
@@ -12,14 +12,17 @@ class Bilingualdataset(Dataset):
         self.tokenizer_tgt=tokenizer_tgt
         self.lang_src=lang_src
         self.lang_tgt=lang_tgt
-        # Token speciali
+        #We define the Special Tokens
         self.sos_token=torch.tensor([tokenizer_src.token_to_id('[SOS]')]).to(torch.int64)
         self.eos_token=torch.tensor([tokenizer_src.token_to_id('[EOS]')]).to(torch.int64)
         self.pad_token=torch.tensor([tokenizer_src.token_to_id('[PAD]')]).to(torch.int64)
 
+    #We define the len method.
     def __len__(self):
         return len(self.ds)
 
+    #We construct the encoder, decoder inputs and the masks. They are returned as values of a dictionary
+    #This is done for every element of 'ds' (pair of sentences), labelled by the integer 'index'
     def __getitem__(self, index):
         src_target_pair=self.ds[index]
         src_text=src_target_pair['translation'][self.lang_src]
@@ -42,6 +45,7 @@ class Bilingualdataset(Dataset):
             ]
         )
 
+        #Decoder input
         decoder_input=torch.cat(
             [
                 self.sos_token,
@@ -50,6 +54,7 @@ class Bilingualdataset(Dataset):
             ]
         )
 
+        #True labels to be compared with the output of the Transformer
         label=torch.cat(
             [
                 torch.tensor(dec_input_tokens).to(torch.int64),
@@ -72,7 +77,8 @@ class Bilingualdataset(Dataset):
             'tgt_text': tgt_text
         }
     
-
+#Triangular mask needed for constructing the decoder mask
 def causal_mask(size):
     mask=torch.triu(torch.ones(1,size,size), diagonal=1).type(torch.int)
+
     return mask==0
