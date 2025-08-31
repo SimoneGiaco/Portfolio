@@ -1,1 +1,3 @@
-Code in Tensorflow for a simple neural network designed for timeseries forecasting
+Code in Tensorflow for a simple neural network designed for timeseries forecasting \
+I attach the dataset as a csv file. It provides the daily minimum temperatures in Melbourne over a period of ten years. The dataset is taken from Kaggle \
+The network contains a CONV1D layer, two LSTMs and two Fully Connected layers. The training requires a few minutes on CPU.
