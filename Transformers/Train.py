@@ -1,5 +1,5 @@
 import os
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0' #To suppress warning regarding floating-point round-off errors from different computation orders.
 
 import torch
 import torch.nn as nn
@@ -16,11 +16,12 @@ from config import get_config, get_weight_path
 from torch.utils.tensorboard.writer import SummaryWriter
 from tqdm import tqdm
 
-
+#We extract all sentence pairs from the dataset 'ds'
 def get_all_sentences(ds,lang):
     for item in ds:
         yield item['translation'][lang]
 
+#We initialize the tokenizers
 def GetTokenizer(config,dataset,language):
     tokenizer_path=Path(config['tokenizer_file'].format(language))
     if not Path.exists(tokenizer_path):
@@ -33,6 +34,7 @@ def GetTokenizer(config,dataset,language):
         tokenizer=Tokenizer.from_file(str(tokenizer_path))
     return tokenizer
 
+# We download the dataset from HuggingFace and prepare the tensors for training.
 def get_dataset(config):
     raw_ds=load_dataset('opus_books', f'{config['lang_src']}-{config['lang_tgt']}', split='train')
     tokenizer_src=GetTokenizer(config,raw_ds,config['lang_src'])
@@ -58,12 +60,14 @@ def get_dataset(config):
     val_dataloader= DataLoader(val_ds, batch_size=1, shuffle=True)
     return train_dataloader, val_dataloader, tokenizer_src, tokenizer_tgt
 
+#We initialize the model by calling the 'build-transformer' function from 'model.py'.
 def get_model(config, vocab_src_len, vocab_tgt_len):
     model = build_transformer(vocab_src_len, vocab_tgt_len, config['seq_len'], config['seq_len'], config['d_model'])
     return model
 
+#We define the training loop.
 def train_model(config):
-    #Specificare device
+    #Specify the device
     device= torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'Using device {device}')
     Path(config['model_folder']).mkdir(parents=True, exist_ok= True)
@@ -80,8 +84,10 @@ def train_model(config):
         initial_epoch = state['epoch']+1
         optimizer.load_state_dict(state['optimizer_state_dict'])
         global_step = state['global_step']
-    #Loss
+        
+    #Loss function
     loss_f= nn.CrossEntropyLoss(ignore_index=tokenizer_src.token_to_id('[PAD]'), label_smoothing=0.1).to(device)
+    
     #TrainingLoop
     for epoch in range(initial_epoch, config['num_epochs']):
         model.train()
@@ -91,18 +97,22 @@ def train_model(config):
             decoder_input= batch['decoder_input'].to(device)
             encoder_mask= batch['encoder_mask'].to(device)
             decoder_mask= batch['decoder_mask'].to(device)
+            
             # Run tensors through transformer
             encoder_output= model.encode(encoder_input, encoder_mask)
             decoder_output= model.decode(encoder_output, decoder_input, encoder_mask, decoder_mask)
             proj_output= model.projection(decoder_output)
+            
             # Compare with labels
             label = batch['label'].to(device)
             loss = loss_f(proj_output.view(-1,tokenizer_tgt.get_vocab_size()), label.view(-1))
             batch_iterator.set_postfix({f'Loss': f'{loss.item():6.3f}'})
+            
             #Log the Loss
             writer.add_scalar('train_loss', loss.item(), global_step)
             writer.flush()
-            #Backpropagate
+            
+            #Backpropagation
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
@@ -119,4 +129,5 @@ def train_model(config):
 
 if __name__=='__main__':
     config = get_config()
+
     train_model(config)
