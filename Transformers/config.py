@@ -1,5 +1,6 @@
 from pathlib import Path
 
+#We define the configuration of the model
 def get_config():
     return {
         'batch_size': 8,
@@ -16,8 +17,10 @@ def get_config():
         'experiment_name': 'runs/tmodel'
     }
 
+#This is the function we will call when compiling the 'Train.py' file to initialize the configuration
 def get_weight_path(config, epoch: str):
     model_folder= config['model_folder']
     model_basename= config['model_basename']
     model_filename= f'{model_basename}{epoch}.pt'
+
     return str(Path('.')/model_folder/model_filename)
