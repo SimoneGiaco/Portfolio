@@ -8,3 +8,5 @@ The folder 'TimeSeries' contains the Tensorflow implementation of a neural netwo
 The folder 'SKLearnAlgorithms' contains the code for data analysis of a dataframe with various ML algorithms provided in the Scikit-Learn python library.
 
 The folder 'PINN' contains the Pytorch implementation of a neural network designed to approximate solutions to a differential equation (PINN architecture).
+
+The folder 'TransactionsScript' contains a python script which handles and summarizes financial transactions in any given time range by storing the data in a csv file.
