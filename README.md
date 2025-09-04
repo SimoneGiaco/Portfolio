@@ -1,7 +1,7 @@
 # Portfolio
 Projects I have been working on recently: 
 
-The folder 'RAG' contains two python scripts which allow LLMs to answer questions about a document (either a pdf uploaded by the user or a file from the arXiv website). We include a gradio UI.
+The folder 'RAG' contains two python scripts which allow LLMs to answer questions about a document (either a pdf uploaded by the user or a file from the arXiv website). We include a Gradio UI.
 
 The folder 'Transformer' contains the Pytorch code for training a transformer model for language translation.
 
