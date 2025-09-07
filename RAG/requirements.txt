@@ -11,4 +11,3 @@ chromadb
 jupyter
 nbval
 requests
-os
