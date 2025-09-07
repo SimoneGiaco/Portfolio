@@ -13,5 +13,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: install packages
         run: make install
+      - name: Download HF Model
+        run: |
+          pip install huggingface_hub
+          python -c "from huggingface_hub import snapshot_download; snapshot_download('microsoft/Phi-3-mini-4k-instruct-gguf')"
       - name: test
         run: make test
