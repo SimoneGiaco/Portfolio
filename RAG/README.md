@@ -1,5 +1,3 @@
-#RAG with Langchain
-
 We provide two Jupyter notebooks which contain the python code to perform RAG with Langchain. \
 The problem we consider is to let a llm answer questions about a document provided by the user. With Langchain libraries we split the text into small chunks, store them in a Chromadb collection. \
 When we ask a question Chromadb selects the most relevant chunks according to cosine similarity and these are added to the prompt for the llm. \
