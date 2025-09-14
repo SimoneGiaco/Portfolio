@@ -8,4 +8,4 @@ The LLMs we have chosen are GGUF quantized, so that they can be run on CPU. They
 
 2) In the 'PDFarXivQA' the Gradio interface can support both pdf files uploads and uploads from the arXiv by providing the arXiv number of the preprint. \
 The chosen LLM is the microsoft "Phi-3-mini-4k-instruct-q4.gguf" which is faster to run (3B parameters) and has an editable context window (set in the file to 4096 tokens). For each question we select 5 chunks of size 500 characters. \
-To run the code one needs first to download the model (select the q4.gguf version) from Huggingface [here]: https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/tree/main
+To run the code one needs first to download the model (select the q4.gguf version) from Huggingface [here](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/tree/main)
