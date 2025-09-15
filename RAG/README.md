@@ -1,3 +1,5 @@
+[![Gradio application test with Github](https://github.com/SimoneGiaco/Portfolio/actions/workflows/main.yml/badge.svg)](https://github.com/SimoneGiaco/Portfolio/actions/workflows/main.yml)
+
 We provide two Jupyter notebooks which contain the python code to perform RAG with Langchain. \
 The problem we consider is to let a llm answer questions about a document provided by the user. With Langchain libraries we split the text into small chunks, store them in a Chromadb collection. \
 When we ask a question Chromadb selects the most relevant chunks according to cosine similarity and these are added to the prompt for the llm. \
@@ -8,5 +10,5 @@ The LLMs we have chosen are GGUF quantized, so that they can be run on CPU. They
 
 2) In the 'PDFarXivQA' the Gradio interface can support both pdf files uploads and uploads from the arXiv by providing the arXiv number of the preprint. \
 The chosen LLM is the microsoft "Phi-3-mini-4k-instruct-q4.gguf" which is faster to run (3B parameters) and has an editable context window (set in the file to 4096 tokens). For each question we select 5 chunks of size 500 characters. \
-To execute the notebook one needs to provide a HuggingFace access token. \
+To execute the notebook one needs to provide a HuggingFace access token. The file has been tested. \
 The model can be downloaded (select the q4.gguf version) from Huggingface [here](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/tree/main)
