@@ -1,0 +1,19 @@
+name: Gradio application test with Github
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: install packages
+        run: make install
+      - name: test
+        env: # Set the secret as an input
+          token_hf: ${{ secrets.HF_TOKEN }}
+        run: make test
